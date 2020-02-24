@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+   <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js'></script>
+   <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/1.0.8/jquery.csv.min.js'></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch-jsonp/1.0.6/fetch-jsonp.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+</head>
+<body>
+    
+<style>
+
+.red{border: 2px solid red;}
+
+
+</style>
+  <div id="app">
+    <div class="row">
+      <div class="card m-3 col-md-3"   :class="item.是否為境外移入=='否'?'red':''" v-for="(item, index) in list">
+
+
+        <h1><span>(</span>${index+1}<span>)</span>${ item.縣市 }</h1>
+        <div><span>年齡層:</span>${ item.年齡層 }</div>
+        <div><span>性別:</span>${ item.性別 }</div>
+        <div><span>是否為境外移入:</span>${ item.是否為境外移入 }</div>
+        <div><span>確定病例數:</span>${ item.確定病例數 }</div>
+        
+     
+
+
+  
+        <div></div>
+      </div>
+    </div>
+  </div>
+
+
+
+<script>
+
+var vm = new Vue({
+  el: '#app',
+  delimiters: ['${', '}'],
+  data: {
+    list: [
+ 
+    ],
+  },
+});
+
+fetch("https://cors-anywhere.herokuapp.com/https://od.cdc.gov.tw/eic/Weekly_Age_County_Gender_19CoV.json", {
+method: 'GET', // *GET, POST, PUT, DELETE, etc.
+})
+.then(res => {
+    let cc= res.json();
+    console.log(cc);
+    return cc;
+}).then(result => {
+    console.log('OK'); // 得到 高雄市的氣溫為 29.30 度 C
+    console.log(result); // 得到 高雄市的氣溫為 29.30 度 C
+    $('#data').text(result);
+    vm.list=result;
+});
+
+    </script>
+</body>
+</html>
