@@ -1,0 +1,76 @@
+  
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mask</title>
+   <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js'></script>
+   <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/1.0.8/jquery.csv.min.js'></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch-jsonp/1.0.6/fetch-jsonp.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/papaparse@latest/papaparse.min.js"></script>
+</head>
+<body>
+    
+<style>
+.red{border: 2px solid red;}
+</style>
+  <div id="app">
+    <div class="row">
+      <div class="card m-3 col-md-3 col-lg-5"  v-for="(item, index) in list">
+        <h5><span>(</span>${index+1}<span>)</span>${ item['1'] }</h5>
+        <div><span></span>${ item['2'] }</div>
+        <div><span>成人口罩&nbsp;</span>${ item['4'] }</div>
+        <div><span>兒童口罩&nbsp;</span>${ item['5'] }</div>
+
+      </div>
+    </div>
+  </div>
+
+
+<script>
+
+
+var vm = new Vue({
+  el: '#app',
+  delimiters: ['${', '}'],
+  data: {
+    list: [
+ 
+    ],
+  },
+});
+
+fetch("https://cors-anywhere.herokuapp.com/https://data.nhi.gov.tw/resource/mask/maskdata.csv", {
+method: 'GET', // *GET, POST, PUT, DELETE, etc.
+})
+.then(res => {
+    let cc= res.text();
+    console.log(cc);
+    return cc;
+})
+
+.then(text => {
+    console.log(text);
+  let resCsv = Papa.parse(text);
+  let newArr=JSON.parse(JSON.stringify(resCsv['data']));
+    
+    return newArr;
+})
+
+
+
+.then(result => {
+    console.log('OK'); // 得到 高雄市的氣溫為 29.30 度 C
+    console.log(result); // 得到 高雄市的氣溫為 29.30 度 C
+    result.shift();
+    result.pop();
+    vm.list=result;
+});
+
+    </script>
+</body>
+</html>
